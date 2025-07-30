@@ -1,5 +1,5 @@
 {
-  description = "Vulkan Flake";
+  description = "Zig Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -24,75 +24,16 @@
         devShells = {
           default = pkgs.mkShell rec {
             buildInputs = with pkgs; [
-              ##################
-              ### VULKAN SDK ###
-              vulkan-headers
-              vulkan-loader
-              vulkan-validation-layers
-              vulkan-tools
-              vulkan-tools-lunarg
-              vulkan-utility-libraries
-              vulkan-extension-layer
-              vulkan-volk
-              vulkan-validation-layers
-              spirv-headers
-              spirv-tools
-              spirv-cross
-              mesa
-              glslang
-              ##################
-
-              ####################
-              ### Compat Tools ###
-              xorg.libX11
-              xorg.libXrandr
-              xorg.libXcursor
-              xorg.libXi
-              xorg.libXxf86vm
-              xorg.libXinerama
-              wayland
-              wayland-protocols
-              kdePackages.qtwayland
-              kdePackages.wayqt
-              ####################
-
               #################
               ### Libraries ###
-              imgui
-              glfw3
-              glm
-              cglm
-              sdl3
-              tinyobjloader
-              vk-bootstrap
-              vulkan-memory-allocator
-              #################
 
               #################
               ### Compilers ###
-              shaderc
-              gcc
-              clang
+
               #################
             ];
 
             packages = with pkgs; [
-              (writeShellApplication {
-                name = "compile-shaders";
-                text = ''
-                  exec ${shaderc.bin}/bin/glslc shader.vert -o vert.spv &
-                  exec ${shaderc.bin}/bin/glslc shader.frag -o frag.spv &
-                  exec ${shaderc.bin}/bin/glslc point.vert -o point.vert.spv &
-                  exec ${shaderc.bin}/bin/glslc point.frag -o point.frag.spv
-                '';
-              })
-              (writeShellApplication {
-                ## Lets renderdoc run on wayland using xwayland
-                name = "renderdoc";
-                text = "QT_QPA_PLATFORM=xcb env -u WAYLAND_DISPLAY qrenderdoc";
-              })
-
-              #############
               ### Langs ###
               zig
               zls
@@ -100,8 +41,6 @@
 
               #############
               ### Tools ###
-              cmake
-              renderdoc
               #############
             ];
 
