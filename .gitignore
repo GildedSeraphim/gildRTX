@@ -1,2 +1,2 @@
-/.zig-cache
-/.direnv
+.zig-cache/
+.direnv/
