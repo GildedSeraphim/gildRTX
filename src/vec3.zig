@@ -1,4 +1,5 @@
 const std = @import("std");
+const Writer = std.io.Writer;
 
 pub const Vec3 = @Vector(3, f64);
 
@@ -23,6 +24,14 @@ pub fn format(w: *Writer, v: Vec3) void {
     w.print("{d} {d} {d}", .{ v[0], v[1], v[2] });
 }
 
+pub const color = std.fmt.Alt(Vec3, colorFormat);
+pub fn colorFormat(v: Vec3, w: *Writer) !void {
+    const _x: u8 = @intFromFloat(v[0] * 255.999);
+    const _y: u8 = @intFromFloat(v[1] * 255.999);
+    const _z: u8 = @intFromFloat(v[2] * 255.999);
+    try w.print("{d} {d} {d}\n", .{ _x, _y, _z });
+}
+
 pub fn dot(lhs: Vec3, rhs: Vec3) f64 {
     return @reduce(.Add, lhs * rhs);
 }
@@ -36,9 +45,8 @@ pub fn cross(lhs: Vec3, rhs: Vec3) Vec3 {
 }
 
 pub fn unit_vector(v: Vec3) Vec3 {
-    const mag: Vec3 = @splat(magnitude(v));
-    if (mag == zero) {
-        return zero;
-    }
-    return v / mag;
+    const mag = magnitude(v);
+    if (mag == 0) return zero;
+    const mag3: Vec3 = @splat(mag);
+    return v / mag3;
 }

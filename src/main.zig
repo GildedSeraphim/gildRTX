@@ -1,5 +1,9 @@
 const std = @import("std");
+const Writer = std.io.Writer;
 const Progress = std.Progress;
+
+const vec = @import("vec3.zig");
+const Vec3 = vec.Vec3;
 
 const width = 256;
 const height = 256;
@@ -24,11 +28,12 @@ pub fn main() !void {
             const fh: f32 = @floatFromInt(h);
             const fw: f32 = @floatFromInt(w);
 
-            const r: u8 = @intFromFloat(255.99 * (fh / (height - 1.0)));
-            const g: u8 = @intFromFloat(255.99 * (fw / (width - 1.0)));
-            const b: u8 = 0;
-
-            try out.print("{d} {d} {d}\n", .{ r, g, b });
+            const pixel: Vec3 = .{
+                fw / (width - 1.0),
+                fh / (height - 1.0),
+                0,
+            };
+            try out.print("{f}", .{vec.color{ .data = pixel }});
         }
     }
     try out.flush();
