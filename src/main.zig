@@ -64,18 +64,25 @@ pub fn main() !void {
     try out.flush();
 }
 
-fn hit_sphere(center: Vec3, radius: f64, r: Ray) bool {
+fn hit_sphere(center: Vec3, radius: f64, r: Ray) f64 {
     const oc: Vec3 = center - r.origin;
     const a = vec.dot(r.dir, r.dir);
     const b = -2.0 * vec.dot(r.dir, oc);
     const c = vec.dot(oc, oc) - radius * radius;
     const discriminant = b * b - 4 * a * c;
-    return discriminant >= 0;
+
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - @sqrt(discriminant)) / (2.0 * a);
+    }
 }
 
 fn ray_color(r: Ray) Vec3 {
-    if (hit_sphere(.{ 0, 0, -1 }, 0.5, r)) {
-        return .{ 1, 0, 0 };
+    const t = hit_sphere(.{ 0, 0, -1 }, 0.5, r);
+    if (t > 0.0) {
+        const N: Vec3 = vec.unit_vector(r.at(t) - Vec3{ 0, 0, -1 });
+        return @mulAdd(Vec3, N, @splat(0.5), @splat(0.5));
     }
 
     const dir = vec.unit_vector(r.dir);

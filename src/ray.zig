@@ -15,5 +15,5 @@ pub fn init(origin: Vec3, dir: Vec3) Ray {
 }
 
 pub fn at(r: Ray, t: f64) Vec3 {
-    return @mulAdd(Vec3, r.origin, r.dir, @splat(t));
+    return @mulAdd(Vec3, @splat(t), r.dir, r.origin);
 }
