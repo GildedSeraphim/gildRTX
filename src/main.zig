@@ -17,10 +17,10 @@ const height = blk: {
 
 const focal_length = 1.0;
 const viewport_height = 2.0;
-const viewport_width = viewport_height * (width + 0.0) / (height - 1.0);
+const viewport_width = viewport_height * (width + 0.0) / (height - 0.0);
 const camera_center: Vec3 = vec.zero;
 
-const viewport_u: Vec3 = .{ viewport_height, 0, 0 };
+const viewport_u: Vec3 = .{ viewport_width, 0, 0 };
 const viewport_v: Vec3 = .{ 0, -viewport_height, 0 };
 
 const pixel_delta_u = viewport_u / vec.splat(width);
@@ -64,7 +64,20 @@ pub fn main() !void {
     try out.flush();
 }
 
+fn hit_sphere(center: Vec3, radius: f64, r: Ray) bool {
+    const oc: Vec3 = center - r.origin;
+    const a = vec.dot(r.dir, r.dir);
+    const b = -2.0 * vec.dot(r.dir, oc);
+    const c = vec.dot(oc, oc) - radius * radius;
+    const discriminant = b * b - 4 * a * c;
+    return discriminant >= 0;
+}
+
 fn ray_color(r: Ray) Vec3 {
+    if (hit_sphere(.{ 0, 0, -1 }, 0.5, r)) {
+        return .{ 1, 0, 0 };
+    }
+
     const dir = vec.unit_vector(r.dir);
     const a = 0.5 * (vec.y(dir) + 1.0);
     const wat: Vec3 = .{ 0.5, 0.7, 1.0 };
