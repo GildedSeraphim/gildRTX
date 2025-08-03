@@ -4,6 +4,7 @@ const Writer = std.io.Writer;
 pub const Vec3 = @Vector(3, f64);
 
 pub const zero: Vec3 = .{ 0, 0, 0 };
+pub const one: Vec3 = .{ 1, 1, 1 };
 
 pub fn x(v: Vec3) f64 {
     return v[0];
@@ -17,6 +18,14 @@ pub fn z(v: Vec3) f64 {
 
 pub fn magnitude(v: Vec3) f64 {
     return @sqrt(@reduce(.Add, v * v));
+}
+
+pub fn splat(n: anytype) Vec3 {
+    switch (@TypeOf(n)) {
+        usize, comptime_int => return @splat(@floatFromInt(n)),
+        f64, comptime_float => return @splat(n),
+        else => unreachable,
+    }
 }
 
 pub const fmt = std.fmt.Alt(Vec3, format);
